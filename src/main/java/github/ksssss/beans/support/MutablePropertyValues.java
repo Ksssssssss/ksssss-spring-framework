@@ -10,12 +10,19 @@ import java.util.Optional;
  */
 public class MutablePropertyValues implements PropertyValues {
 
+    /**
+     * List of PropertyValue objects
+     */
     private List<PropertyValue> propertyValuesList;
 
     public MutablePropertyValues() {
         propertyValuesList = new ArrayList<>(10);
     }
 
+    /**
+     * 深拷贝
+     * @param other
+     */
     public MutablePropertyValues(PropertyValues other) {
         if (other != null) {
             PropertyValue[] pvs = other.getPropertyValues();
