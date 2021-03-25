@@ -25,7 +25,7 @@ public interface BeanFactory {
      * @param <T>
      * @return
      */
-    <T> T getBean(String name, Class<T> requireType);
+    Object getBean(String name, Class requireType);
 
     /**
      * 获取bean通过构造参数
