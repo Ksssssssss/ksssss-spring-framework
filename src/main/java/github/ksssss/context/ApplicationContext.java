@@ -1,11 +1,11 @@
 package github.ksssss.context;
 
-import com.sun.xml.internal.ws.transport.http.ResourceLoader;
-import github.ksssss.beans.BeanFactory;
-import github.ksssss.beans.factory.AutowireCapableBeanFactory;
 import github.ksssss.beans.factory.DefaultBeanFactory;
 import github.ksssss.context.annotation.ComponentScan;
+import github.ksssss.context.annotation.mvc.Component;
+import github.ksssss.utils.ReflectionUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,7 +18,6 @@ public class ApplicationContext {
     private final AtomicBoolean active = new AtomicBoolean();
     private volatile DefaultBeanFactory beanFactory;
     private Class<?> primarySource;
-
 
     public ApplicationContext(Class<?> primarySource) {
         this.primarySource = primarySource;
@@ -50,7 +49,14 @@ public class ApplicationContext {
     }
 
     private Set<Class<?>> loadClasses(String[] packageNames) {
+        //todo 1、扫描component/controller/service
+        Set<Class<?>> componentClasses = ReflectionUtil.scanPackagesClasses(packageNames, Component.class);
+        registerBeanClasses(Component.class, componentClasses);
         return null;
+    }
+
+    private void registerBeanClasses(Class<? extends Annotation> classType, Set<Class<?>> beanClasses) {
+        this.beanFactory.registerBeanClasses(classType, beanClasses);
     }
 
     private String[] getPackageNames() {

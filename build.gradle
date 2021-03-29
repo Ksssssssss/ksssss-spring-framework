@@ -6,7 +6,7 @@ group 'github.ksssss'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
-
+def reflectionsVersion = '0.9.12'
 repositories {
     mavenCentral()
 }
@@ -14,6 +14,6 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
-
+    compile "org.reflections:reflections:${reflectionsVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

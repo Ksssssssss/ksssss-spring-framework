@@ -1,21 +1,24 @@
 package github.ksssss.beans.factory;
 
 import github.ksssss.beans.BeanFactory;
-import github.ksssss.beans.support.BeanRegistry;
-import github.ksssss.exception.BeanRegisteredException;
+import github.ksssss.beans.support.BeanClassesRegistry;
 import github.ksssss.exception.BeansException;
 import github.ksssss.exception.NoSuchBeanException;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ksssss
  * @since 2021/3/25 22:58
  */
-public class DefaultBeanFactory implements BeanFactory, BeanRegistry {
+public class DefaultBeanFactory implements BeanFactory, BeanClassesRegistry {
     private final Map<String, Object> singletonCache = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Annotation>, Set<Class<?>>> annotationClasses = new ConcurrentHashMap<>();
 
     @Override
     public Object getBean(String name) {
@@ -75,14 +78,13 @@ public class DefaultBeanFactory implements BeanFactory, BeanRegistry {
     }
 
     @Override
-    public void registerBean(String beanName, Object bean) throws BeansException {
-        if (containsBean(beanName)) {
-            throw new BeanRegisteredException("beanName is exist");
-        }
-        addBean(beanName, bean);
+    public void registerBeanClasses(Class<? extends Annotation> classType, Set<Class<?>> beanClasses) throws BeansException {
+        Set<Class<?>> classes = this.annotationClasses.getOrDefault(classType, new HashSet<>());
+        classes.addAll(beanClasses);
+        addBeanClasses(classType, beanClasses);
     }
 
-    public void addBean(String beanName, Object bean) {
-        this.singletonCache.put(beanName, bean);
+    public void addBeanClasses(Class<? extends Annotation> classType, Set<Class<?>> beanClasses) {
+        this.annotationClasses.put(classType, beanClasses);
     }
 }
